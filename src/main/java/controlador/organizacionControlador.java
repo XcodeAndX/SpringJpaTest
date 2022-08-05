@@ -1,9 +1,11 @@
 package controlador;
 
 import com.PruebaTecnica.SpringJpaTest.Excepcion.RecordNotFoundException;
-import com.PruebaTecnica.SpringJpaTest.organizacionRepository;
 import entity.organizacion;
+import entity.usuario;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,17 +20,14 @@ import java.util.Optional;
 public class organizacionControlador {
 
     @Autowired
-    organizacionRepository repository;
+    organizacionService service;
 
-    @GetMapping("/{Id}")
-    public ResponseEntity<organizacion> getOrganizacionId (@PathVariable("id") int id) throws RecordNotFoundException{
-        Optional<organizacion> organizacion = repository.findById(id);
-        if (organizacion.isPresent()){
-            return organizacion.get();
-        }
-        else {
-            throw new RecordNotFoundException("No existe la organizacion con la ID dada");
-        }
+    @GetMapping("/{id}")
+    public ResponseEntity<organizacion> getOrganizacionId(@PathVariable("id") int id) throws RecordNotFoundException{
+
+        organizacion organizacion = service.getOrganizacionId(id);
+
+        return new ResponseEntity<organizacion>(organizacion, new HttpHeaders(), HttpStatus.OK);
     }
 
 }
